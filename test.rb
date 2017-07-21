@@ -4,7 +4,6 @@ require 'rubygems'
 require 'json'
 require 'win32ole'
 require 'watir'
-require 'Timeout'
 
 
 #访问一次网站并记录访问时间
@@ -23,9 +22,9 @@ def access_page(web_name)
     plugin.GotoUrl(web_name)
     control.Wait(plugin, 30)
   rescue
-    puts "浏览器窗口未打开"
-  ensure
-    plugin.Stop()
+    puts "浏览器窗口打开异常"
+  #ensure
+   # plugin.Stop()
   end
   ip = plugin.log.Entries.Item(0).ServerIP
   puts "本次访问网页的IP是#{ip.chomp}"
@@ -50,15 +49,24 @@ def access_times(web_name, times)
   time_array = []
   times.to_i.times do
     time_array << access_page(web_name)
-    time_eclipsed = calculate_average(time_array)
-    access_times = @ZX_times.to_i - @fail_times.to_i
+    @time_eclipsed = calculate_average(time_array)
+    @access_times = @ZX_times.to_i - @fail_times.to_i
     puts "#################################"
     puts "#访问的网站是#{web_name.chomp}"
     puts "#总共尝试访问#{@ZX_times}次,访问失败#{@fail_times}次    #"
-    puts "#成功访问网页#{access_times}次的平均值是#{time_eclipsed.round(3)} #"
+    puts "#成功访问网页#{@access_times}次的平均值是#{@time_eclipsed.round(3)} #"
     puts "#################################"
     sleep 5
   end
+  txt_name1 = web_name.delete "://."
+  txt_name = txt_name1.chomp.insert(-1,'.txt')
+  aFile = File.new("D:\\#{txt_name}", "w")
+  aFile.puts "#################################"
+  aFile.puts "#访问的网站是#{web_name.chomp}"
+  aFile.puts "#总共尝试访问#{@ZX_times}次,访问失败#{@fail_times}次    #"
+  aFile.puts "#成功访问网页#{@access_times}次的平均值是#{@time_eclipsed.round(3)} #"
+  aFile.puts "#################################"
+  aFile.close
 end
 
 #算出成功访问网站延时的平均值
