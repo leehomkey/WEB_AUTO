@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'json'
 require 'win32ole'
-require 'watir'
+#require 'watir'
 
 
 #访问一次网站并记录访问时间
@@ -70,11 +70,11 @@ def access_times(web_name, times)
   txt_name1 = web_name.delete "://."
   txt_name = txt_name1.chomp.insert(-1, '.txt')
   aFile = File.new("D:\\#{txt_name}", "w")
-  puts "##########################################"
-  puts "#访问的网站是#{web_name.chomp}"
-  puts "#总共尝试访问#{@ZX_times}次,环境加载异常#{@YC_times},访问失败#{@fail_times}次#"
-  puts "#成功访问网页#{@access_times.abs}次的平均值是#{@time_eclipsed.round(3)}          #"
-  puts "##########################################"
+  aFile.puts "##########################################"
+  aFile.puts "#访问的网站是#{web_name.chomp}"
+  aFile.puts "#总共尝试访问#{@ZX_times}次,环境加载异常#{@YC_times},访问失败#{@fail_times}次#"
+  aFile.puts "#成功访问网页#{@access_times.abs}次的平均值是#{@time_eclipsed.round(3)}          #"
+  aFile.puts "##########################################"
   aFile.close
 end
 
